@@ -1,0 +1,17 @@
+#1 wc -l ../data/fasta/407228326.fasta ../data/fasta/407228412.fasta ../data/fasta/e_coli.fasta 
+wc -l counts newline characters, not visual lines. The final lines of the two numbered files are not newline-terminated.
+
+#2 tail -n +2 ../data/fasta/e_coli.fasta 
+This is because the header is in the first line, and tail -n +2 means print everything from the second line, hence the header is excluded.
+
+#3 echo $(( $(tail -n +2 ../data/fasta/e_coli.fasta| wc -c) - $(tail -n +2 ../data/fasta/e_coli.fasta| wc -l) ))
+so wc -c means word count bytes, and wc -l counts newline characters. We need to exclude the header (thus we need to put tail -n +2 at front and use a pipe) and line-ending characters, then count all sequence symbols
+The result is 4686137
+
+#4 tail -n +2 ../data/fasta/e_coli.fasta | tr -d '\n' | grep -o ATGC |wc -l
+First, we take out the header, then use a pipe to remove the line breaks, then use another pipe to find ATGC, grep -o gives a new line when we found a ATGC. Therfore we then use a pipe wc -l to count how many lines are there.
+The result is 21968
+
+#5 echo "$(( $(tail -n +2 ../data/fasta/e_coli.fasta |grep -o A |wc -l) + $(tail -n +2 ../data/fasta/e_coli.fasta |grep -o T |wc -l) )) / $(( $(tail -n +2 ../data/fasta/e_coli.fasta |grep -o G |wc -l) + $(tail -n +2 ../data/fasta/e_coli.fasta |grep -o C |wc -l) ))"| bc -l
+Here we find the counts of A, T, G, C. At first, I use the echo $(()) and got 0. Therefore I changed the code to add a pipe with bc -l, we now can see the result up to 20 decimal places. 
+The result is .96922822848944879586
