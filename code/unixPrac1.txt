@@ -1,5 +1,6 @@
 #1 wc -l ../data/fasta/407228326.fasta ../data/fasta/407228412.fasta ../data/fasta/e_coli.fasta 
 wc -l counts newline characters, not visual lines. The final lines of the two numbered files are not newline-terminated.
+The results is 78258
 
 #2 tail -n +2 ../data/fasta/e_coli.fasta 
 This is because the header is in the first line, and tail -n +2 means print everything from the second line, hence the header is excluded.
